@@ -1,5 +1,5 @@
-import { TreeNodeVO } from "../../data/model/treeDisplay/TreeDisplay.model";
 import { TreeDisplayView } from "./TreeDisplay.component.view";
+import { TreeNodeVO } from "../../data/model/treeDisplay/TreeDisplay.model";
 
 type TreeDisplayPropsVO = {
   treeNodes: Array<TreeNodeVO>;
