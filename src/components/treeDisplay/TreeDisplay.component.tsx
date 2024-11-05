@@ -14,7 +14,9 @@ export const TreeDisplay: React.FC<TreeDisplayPropsVO> = (
     <>
       {treeNodes.map((node) => (
         <div key={node.id}>
-          <TreeDisplayView currentNode={{ ...node }} />
+          <TreeDisplayView
+            currentNode={{ ...node }}
+          />
         </div>
       ))}
     </>
