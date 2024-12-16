@@ -31,7 +31,7 @@ export const TreeDisplay: React.FC<TreeDisplayPropsVO> = (
   return (
     <>
       {treeNodes.map((node) => (
-        <div key={node.id}>
+        <div key={node.nodeId}>
           <TreeDisplayView
             currentNode={{ ...node }}
             onSelectNode={onSelectNode}

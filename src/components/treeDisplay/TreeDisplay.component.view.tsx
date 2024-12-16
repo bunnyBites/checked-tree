@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { TreeNodeVO } from "../../data/model/treeDisplay/TreeDisplay.model";
 import { TreeDisplay } from "./TreeDisplay.component";
@@ -14,6 +14,14 @@ export const TreeDisplayView: React.FC<TreeDisplayViewPropsVO> = (
   const { currentNode, onSelectNode } = props;
   const [isExpandNode, setIsExpandNode] = useState<boolean>(true);
 
+  const checkboxRef = useRef<any>();
+
+  useEffect(() => {
+    if (checkboxRef?.current) {
+      checkboxRef.current.indeterminate = currentNode.indeterminate;
+    }
+  }, [checkboxRef, currentNode.indeterminate]);
+
   const renderCheckboxInput = () => (
     <div
       className={clsx("form-check", {
@@ -25,6 +33,7 @@ export const TreeDisplayView: React.FC<TreeDisplayViewPropsVO> = (
         type="checkbox"
         checked={currentNode.isActive}
         id={`${currentNode.id}-checkbox`}
+        ref={checkboxRef}
         onChange={(event) => {
           onSelectNode(event.target.checked, currentNode);
           setIsExpandNode(true);

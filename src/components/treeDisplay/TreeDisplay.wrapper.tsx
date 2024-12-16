@@ -9,6 +9,7 @@ import { TreeNodeVO } from "../../data/model/treeDisplay/TreeDisplay.model";
 export const TreeDisplayWrapper: React.FC = (
 ) => {
   const treeViewContext = useContext(TreeDisplayContext);
+  console.log(treeViewContext?.[0].treeNodes);
 
   const onSelectNode = (isNodeSelected: boolean, selectedNode: TreeNodeVO) => {
     const dispatch = treeViewContext?.[1];
@@ -26,7 +27,7 @@ export const TreeDisplayWrapper: React.FC = (
   return (
     <>
       {treeViewContext?.[0].treeNodes?.map((node) => (
-        <div key={node.id}>
+        <div key={node.nodeId}>
           <TreeDisplayView
             currentNode={{ ...node }}
             onSelectNode={onSelectNode}
