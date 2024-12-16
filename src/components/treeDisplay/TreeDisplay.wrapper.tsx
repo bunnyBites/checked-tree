@@ -2,17 +2,34 @@
 import { useContext } from "react";
 import { TreeDisplayContext } from "../../Context.provider";
 import { TreeDisplayView } from "./TreeDisplay.component.view";
+import { onSetTreeNodes } from '../../actions/TreeView.actions';
+import { TreeDisplayController } from "./TreeDisplay.controller";
+import { TreeNodeVO } from "../../data/model/treeDisplay/TreeDisplay.model";
 
 export const TreeDisplayWrapper: React.FC = (
 ) => {
-  const treeDisplayContext = useContext(TreeDisplayContext);
+  const treeViewContext = useContext(TreeDisplayContext);
+
+  const onSelectNode = (isNodeSelected: boolean, selectedNode: TreeNodeVO) => {
+    const dispatch = treeViewContext?.[1];
+    const treeViewState = treeViewContext?.[0];
+    if (!dispatch || !treeViewState) return;
+
+    TreeDisplayController.onSelectTreeNode(
+      (updatedNodes) => { onSetTreeNodes(updatedNodes, dispatch); },
+      selectedNode,
+      treeViewState.treeNodes,
+      isNodeSelected,
+    )
+  }
 
   return (
     <>
-      {treeDisplayContext?.[0].treeNodes?.map((node) => (
+      {treeViewContext?.[0].treeNodes?.map((node) => (
         <div key={node.id}>
           <TreeDisplayView
             currentNode={{ ...node }}
+            onSelectNode={onSelectNode}
           />
         </div>
       ))}

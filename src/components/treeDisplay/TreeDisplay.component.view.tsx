@@ -5,12 +5,13 @@ import { TreeDisplay } from "./TreeDisplay.component";
 
 type TreeDisplayViewPropsVO = {
   currentNode: TreeNodeVO;
+  onSelectNode: (isNodeSelected: boolean, selectedNode: TreeNodeVO) => void,
 };
 
 export const TreeDisplayView: React.FC<TreeDisplayViewPropsVO> = (
   props: TreeDisplayViewPropsVO
 ) => {
-  const { currentNode } = props;
+  const { currentNode, onSelectNode } = props;
   const [isExpandNode, setIsExpandNode] = useState<boolean>(true);
 
   const renderCheckboxInput = () => (
@@ -22,9 +23,12 @@ export const TreeDisplayView: React.FC<TreeDisplayViewPropsVO> = (
       <input
         className="form-check-input"
         type="checkbox"
-        value=""
+        checked={currentNode.isActive}
         id={`${currentNode.id}-checkbox`}
-        onChange={() => setIsExpandNode(true)}
+        onChange={(event) => {
+          onSelectNode(event.target.checked, currentNode);
+          setIsExpandNode(true);
+        }}
       />
       <label
         className="form-check-label"
@@ -57,7 +61,9 @@ export const TreeDisplayView: React.FC<TreeDisplayViewPropsVO> = (
         {renderCheckboxInput()}
       </div>
       {!!currentNode.children.length && isExpandNode && (
-        <TreeDisplay treeNodes={currentNode.children} />
+        <div className="ps-2">
+          <TreeDisplay treeNodes={currentNode.children} />
+        </div>
       )}
     </div>
   );
