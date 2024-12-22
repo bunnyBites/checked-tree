@@ -36,6 +36,13 @@ export const TREE_DISPLAY_MOCK: Array<TreeNodeVO> = [
         indeterminate: false,
         children: [],
       },
+      {
+        id: 6,
+        name: "Child 2.2",
+        isActive: false,
+        indeterminate: false,
+        children: [],
+      },
     ],
   },
 ];

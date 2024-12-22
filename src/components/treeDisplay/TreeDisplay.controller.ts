@@ -5,7 +5,7 @@ export class TreeDisplayController {
     setTreeNodes: (updatedTreeNodes: Array<TreeNodeVO>) => void,
     selectedNode: TreeNodeVO,
     treeNodes: Array<TreeNodeVO>,
-    isNodeSelected: boolean
+    isNodeSelected: boolean,
   ): void => {
     const updatedSelectedNode: TreeNodeVO = {
       ...selectedNode,
@@ -16,27 +16,19 @@ export class TreeDisplayController {
     updatedSelectedNode.children =
       TreeDisplayController.toggleAllChildNodeActiveState(
         updatedSelectedNode.children,
-        isNodeSelected
+        isNodeSelected,
       );
 
-    let updatedTreeNode = TreeDisplayController.updateTreeNode(
+    const updatedTreeNode = TreeDisplayController.updateTreeNode(
       updatedSelectedNode,
-      treeNodes
+      treeNodes,
     );
 
     // toggle all parent nodes of the updated selectedNode
-    const updatedRootParentNode = TreeDisplayController.updateTillRootParentNode(
+    TreeDisplayController.updateTillRootParentNode(
       updatedSelectedNode,
-      updatedTreeNode
+      updatedTreeNode,
     );
-
-    // update root node to the existing updatedTreeNode
-    if (updatedRootParentNode) {
-      updatedTreeNode = updatedTreeNode.map((node) => {
-        if (node.nodeId === updatedRootParentNode.nodeId) return updatedRootParentNode;
-        return node;
-      });
-    }
 
     // set the updatedTreeNode to state
     setTreeNodes(updatedTreeNode);
@@ -44,11 +36,14 @@ export class TreeDisplayController {
 
   private static readonly updateTillRootParentNode = (
     childNode: TreeNodeVO,
-    treeNodes: Array<TreeNodeVO>
+    treeNodes: Array<TreeNodeVO>,
   ): TreeNodeVO | null => {
     if (!childNode.parentId) return childNode;
 
-    const parentNode = TreeDisplayController.getParentNode(childNode.parentId, treeNodes);
+    const parentNode = TreeDisplayController.getParentNode(
+      childNode.parentId,
+      treeNodes,
+    );
 
     if (parentNode) {
       parentNode.children = parentNode.children.map((node) => {
@@ -56,7 +51,9 @@ export class TreeDisplayController {
         return node;
       });
 
-      const activeChildrenLen = parentNode.children.filter((node) => node.isActive).length;
+      const activeChildrenLen = parentNode.children.filter(
+        (node) => node.isActive,
+      ).length;
       const isActiveChildren = parentNode.children.length === activeChildrenLen;
 
       parentNode.isActive = isActiveChildren;
@@ -64,30 +61,36 @@ export class TreeDisplayController {
       parentNode.indeterminate =
         !!activeChildrenLen && activeChildrenLen < parentNode.children.length;
 
-      return TreeDisplayController.updateTillRootParentNode(parentNode, treeNodes);
+      return TreeDisplayController.updateTillRootParentNode(
+        parentNode,
+        treeNodes,
+      );
     }
 
     return null;
   };
 
-  private static readonly getParentNode = (
+  private static getParentNode(
     parentId: string,
-    treeNodesToBeProbed: Array<TreeNodeVO>
-  ): TreeNodeVO | undefined => {
+    treeNodesToBeProbed: Array<TreeNodeVO>,
+  ): TreeNodeVO | undefined {
     for (const node of treeNodesToBeProbed) {
       if (node.nodeId === parentId) {
         return node;
       } else if (node.children.length) {
-        return TreeDisplayController.getParentNode(parentId, node.children);
+        const searchedParentNode = TreeDisplayController.getParentNode(
+          parentId,
+          node.children,
+        );
+        if (searchedParentNode) return searchedParentNode;
       }
-
-      return node;
     }
-  };
+    return undefined;
+  }
 
   private static readonly updateTreeNode = (
     updatedTreeNode: TreeNodeVO,
-    treeNodes: Array<TreeNodeVO>
+    treeNodes: Array<TreeNodeVO>,
   ): Array<TreeNodeVO> =>
     treeNodes.map((node) => {
       if (updatedTreeNode.nodeId === node.nodeId) {
@@ -95,7 +98,7 @@ export class TreeDisplayController {
       } else if (node.children.length) {
         node.children = TreeDisplayController.updateTreeNode(
           updatedTreeNode,
-          node.children
+          node.children,
         );
       }
       return node;
@@ -103,14 +106,14 @@ export class TreeDisplayController {
 
   private static readonly toggleAllChildNodeActiveState = (
     childNodes: Array<TreeNodeVO>,
-    isParentActive: boolean
+    isParentActive: boolean,
   ): Array<TreeNodeVO> =>
     childNodes?.map((node) => ({
       ...node,
       isActive: isParentActive,
       children: TreeDisplayController.toggleAllChildNodeActiveState(
         node?.children,
-        isParentActive
+        isParentActive,
       ),
     }));
 }

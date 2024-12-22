@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { TreeDisplayView } from "./TreeDisplay.component.view";
-import { onSetTreeNodes } from '../../actions/TreeView.actions';
+import { onSetTreeNodes } from "../../actions/TreeView.actions";
 import { TreeNodeVO } from "../../data/model/treeDisplay/TreeDisplay.model";
 import { TreeDisplayContext } from "../../Context.provider";
 import { TreeDisplayController } from "./TreeDisplay.controller";
@@ -10,7 +10,7 @@ type TreeDisplayPropsVO = {
 };
 
 export const TreeDisplay: React.FC<TreeDisplayPropsVO> = (
-  props: TreeDisplayPropsVO
+  props: TreeDisplayPropsVO,
 ) => {
   const { treeNodes } = props;
   const treeViewContext = useContext(TreeDisplayContext);
@@ -21,12 +21,14 @@ export const TreeDisplay: React.FC<TreeDisplayPropsVO> = (
     if (!dispatch || !treeViewState) return;
 
     TreeDisplayController.onSelectTreeNode(
-      (updatedNodes) => { onSetTreeNodes(updatedNodes, dispatch); },
+      (updatedNodes) => {
+        onSetTreeNodes(updatedNodes, dispatch);
+      },
       selectedNode,
-      treeViewState.treeNodes,
+      Array.from(treeViewState.treeNodes),
       isNodeSelected,
-    )
-  }
+    );
+  };
 
   return (
     <>
