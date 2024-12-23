@@ -1,6 +1,9 @@
 import { useContext } from "react";
 import { TreeDisplayContext } from "../../../Context.provider";
-import { TreeNodeVO } from "../../../data/model/treeDisplay/TreeDisplay.model";
+import {
+  TreeDisplayHelper,
+  TreeNodeVO,
+} from "../../../data/model/treeDisplay/TreeDisplay.model";
 import { TreeDisplayController } from "../TreeDisplay.controller";
 import { NodeInputView } from "./NodeInput.component.view";
 import { onSetTreeNodes } from "../../../actions/TreeView.actions";
@@ -32,7 +35,10 @@ export const NodeInput: React.FC<NodeInputPropsVO> = (
       treeNodeState.treeNodes,
     );
 
-    onSetTreeNodes(updatedCurrentTreeNodes, dispatch);
+    onSetTreeNodes(
+      TreeDisplayHelper.prepareTreeNodeInitialValues(updatedCurrentTreeNodes),
+      dispatch,
+    );
   };
 
   return <NodeInputView onAddNode={onAddNode} currentNode={currentNode} />;
