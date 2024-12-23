@@ -2,25 +2,26 @@ import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { TreeNodeVO } from "../../data/model/treeDisplay/TreeDisplay.model";
 import { TreeDisplay } from "./TreeDisplay.component";
+import { NodeInput } from "./nodeInput/NodeInput.component";
 
 type TreeDisplayViewPropsVO = {
   currentNode: TreeNodeVO;
-  onSelectNode: (isNodeSelected: boolean, selectedNode: TreeNodeVO) => void,
+  onSelectNode: (isNodeSelected: boolean, selectedNode: TreeNodeVO) => void;
 };
 
 export const TreeDisplayView: React.FC<TreeDisplayViewPropsVO> = (
-  props: TreeDisplayViewPropsVO
+  props: TreeDisplayViewPropsVO,
 ) => {
   const { currentNode, onSelectNode } = props;
   const [isExpandNode, setIsExpandNode] = useState<boolean>(true);
 
-  const checkboxRef = useRef<any>();
+  const checkboxRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (checkboxRef?.current) {
+    if (checkboxRef.current) {
       checkboxRef.current.indeterminate = currentNode.indeterminate;
     }
-  }, [checkboxRef, currentNode.indeterminate]);
+  }, [currentNode.indeterminate]);
 
   const renderCheckboxInput = () => (
     <div
@@ -55,9 +56,9 @@ export const TreeDisplayView: React.FC<TreeDisplayViewPropsVO> = (
       className="btn btn-sm btn-flush"
     >
       <i
-        className={clsx("bi bi-caret-down-fill text-white", {
+        className={clsx("text-white", {
           "bi-caret-down-fill": isExpandNode,
-          "bi-caret-right-fill": isExpandNode,
+          "bi-caret-right-fill": !isExpandNode,
         })}
       />
     </button>
@@ -65,9 +66,10 @@ export const TreeDisplayView: React.FC<TreeDisplayViewPropsVO> = (
 
   return (
     <div className="ps-4 py-1">
-      <div className="d-flex align-items">
+      <div className="d-flex align-items-center">
         {!!currentNode.children.length && renderExpandCollapseBtn()}
-        {renderCheckboxInput()}
+        {!currentNode.isEditMode && renderCheckboxInput()}
+        {!!currentNode.isEditMode && <NodeInput currentNode={currentNode} />}
       </div>
       {!!currentNode.children.length && isExpandNode && (
         <div className="ps-2">

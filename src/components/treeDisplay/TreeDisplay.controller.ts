@@ -88,7 +88,7 @@ export class TreeDisplayController {
     return undefined;
   }
 
-  private static readonly updateTreeNode = (
+  public static readonly updateTreeNode = (
     updatedTreeNode: TreeNodeVO,
     treeNodes: Array<TreeNodeVO>,
   ): Array<TreeNodeVO> =>
