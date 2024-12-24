@@ -33,9 +33,40 @@ export const CheckboxInput: React.FC<CheckboxInputPropsVO> = (
     );
   };
 
+  const onAddNode = () => {
+    if (!treeViewContext) return;
+
+    const clonedCurrentNode = { ...currentNode };
+
+    const newChildNode: TreeNodeVO = {
+      id: clonedCurrentNode.id + 20,
+      name: "",
+      isEditMode: true,
+      children: [],
+      indeterminate: false,
+      isActive: false,
+      parentId: clonedCurrentNode.nodeId,
+
+      // you can use different library to generate unique id
+      nodeId: `${currentNode.name}-${clonedCurrentNode.id + 20}`,
+    };
+
+    clonedCurrentNode.children.push(newChildNode);
+
+    const updatedTreeNodes = TreeDisplayController.updateTreeNode(
+      clonedCurrentNode,
+      treeViewContext?.[0].treeNodes,
+    );
+
+    const dispatch = treeViewContext?.[1];
+
+    onSetTreeNodes(updatedTreeNodes, dispatch);
+  };
+
   return (
     <CheckboxInputView
       isExpanded={isExpanded}
+      onAddNode={onAddNode}
       setIsExpandNode={setIsExpandNode}
       onSelectNode={onSelectNode}
       currentNode={currentNode}

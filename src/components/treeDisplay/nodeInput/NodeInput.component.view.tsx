@@ -17,6 +17,7 @@ export const NodeInputView: React.FC<NodeInputPropsVO> = (
       <input
         type="text"
         maxLength={12}
+        autoFocus
         className="form-control"
         name={currentNode.nodeId}
         onChange={(event) => {
