@@ -1,3 +1,4 @@
+import uuid from "react-uuid";
 import { TreeNodeVO } from "../../../data/model/treeDisplay/TreeDisplay.model";
 import { TreeDisplayController } from "../TreeDisplay.controller";
 
@@ -20,7 +21,7 @@ export class CheckboxInputController {
       parentId: clonedCurrentNode.nodeId,
 
       // you can use different library to generate unique id
-      nodeId: `${currentNode.name}-${clonedCurrentNode.id + 20}`,
+      nodeId: uuid(),
     };
 
     clonedCurrentNode.children.push(newChildNode);

@@ -17,7 +17,7 @@ export class TreeDisplayHelper {
     treeNodes: Array<TreeNodeVO>,
   ): Array<TreeNodeVO> =>
     treeNodes.map((node) => {
-      const nodeId = `${node.name}-${node.id}`;
+      const nodeId = node?.nodeId || `${node.name}-${node.id}`;
 
       return {
         ...node,
@@ -35,7 +35,7 @@ export class TreeDisplayHelper {
     parentNodeId: string,
   ): Array<TreeNodeVO> =>
     childNodes?.map((node) => {
-      const nodeId = `${node.name}-${node.id}`;
+      const nodeId = node?.nodeId || `${node.name}-${node.id}`;
 
       return {
         ...node,
