@@ -59,7 +59,7 @@ export const CheckboxInputView: React.FC<CheckboxInputViewPropsVO> = (
             className="form-check-input"
             type="checkbox"
             checked={currentNode.isActive}
-            id={`${currentNode.id}-checkbox`}
+            id={`${currentNode.nodeId}-checkbox`}
             ref={checkboxRef}
             onChange={(event) => {
               onSelectNode(event.target.checked, currentNode);
