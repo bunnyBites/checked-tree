@@ -4,6 +4,7 @@ export interface TreeNodeVO {
   isActive: boolean;
   parentId?: string;
   nodeId?: string;
+  isEditMode?: boolean;
 
   // to show that parent has partial active children
   indeterminate: boolean;
@@ -13,7 +14,7 @@ export interface TreeNodeVO {
 // helper function
 export class TreeDisplayHelper {
   public static prepareTreeNodeInitialValues = (
-    treeNodes: Array<TreeNodeVO>
+    treeNodes: Array<TreeNodeVO>,
   ): Array<TreeNodeVO> =>
     treeNodes.map((node) => {
       const nodeId = `${node.name}-${node.id}`;
@@ -24,14 +25,14 @@ export class TreeDisplayHelper {
         nodeId,
         children: TreeDisplayHelper.prepareTreeNodeWithParentId(
           node.children,
-          nodeId
+          nodeId,
         ),
       };
     });
 
   private static prepareTreeNodeWithParentId = (
     childNodes: Array<TreeNodeVO>,
-    parentNodeId: string
+    parentNodeId: string,
   ): Array<TreeNodeVO> =>
     childNodes?.map((node) => {
       const nodeId = `${node.name}-${node.id}`;
@@ -42,7 +43,7 @@ export class TreeDisplayHelper {
         parentId: parentNodeId,
         children: TreeDisplayHelper.prepareTreeNodeWithParentId(
           node.children,
-          nodeId
+          nodeId,
         ),
       };
     });
