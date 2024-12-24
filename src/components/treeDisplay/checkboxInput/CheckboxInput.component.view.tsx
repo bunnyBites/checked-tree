@@ -8,13 +8,20 @@ type CheckboxInputViewPropsVO = {
   isExpanded: boolean;
   setIsExpandNode: (isExpanded: boolean) => void;
   onAddNode: () => void;
+  isShowAddNodeBtn: boolean;
 };
 
 export const CheckboxInputView: React.FC<CheckboxInputViewPropsVO> = (
   props: CheckboxInputViewPropsVO,
 ) => {
-  const { currentNode, onSelectNode, isExpanded, setIsExpandNode, onAddNode } =
-    props;
+  const {
+    currentNode,
+    onSelectNode,
+    isExpanded,
+    setIsExpandNode,
+    onAddNode,
+    isShowAddNodeBtn,
+  } = props;
 
   const checkboxRef = useRef<HTMLInputElement | null>(null);
 
@@ -66,13 +73,15 @@ export const CheckboxInputView: React.FC<CheckboxInputViewPropsVO> = (
             {currentNode.name}
           </label>
         </div>
-        <button
-          onClick={onAddNode}
-          type="button"
-          className="btn btn-dark btn-sm ms-2"
-        >
-          +
-        </button>
+        {isShowAddNodeBtn && (
+          <button
+            onClick={onAddNode}
+            type="button"
+            className="btn btn-dark btn-sm ms-2"
+          >
+            +
+          </button>
+        )}
       </div>
     </>
   );

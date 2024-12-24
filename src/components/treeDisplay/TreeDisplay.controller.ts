@@ -1,6 +1,16 @@
 import { TreeNodeVO } from "../../data/model/treeDisplay/TreeDisplay.model";
 
 export class TreeDisplayController {
+  public static readonly removeEditableNodes = (
+    treeNodes: Array<TreeNodeVO>,
+  ): Array<TreeNodeVO> =>
+    treeNodes
+      .filter((node) => !node.isEditMode)
+      .map((node) => ({
+        ...node,
+        children: TreeDisplayController.removeEditableNodes(node.children),
+      }));
+
   public static readonly onSelectTreeNode = (
     setTreeNodes: (updatedTreeNodes: Array<TreeNodeVO>) => void,
     selectedNode: TreeNodeVO,
@@ -33,6 +43,22 @@ export class TreeDisplayController {
     // set the updatedTreeNode to state
     setTreeNodes(updatedTreeNode);
   };
+
+  public static readonly updateTreeNode = (
+    updatedTreeNode: TreeNodeVO,
+    treeNodes: Array<TreeNodeVO>,
+  ): Array<TreeNodeVO> =>
+    treeNodes.map((node) => {
+      if (updatedTreeNode.nodeId === node.nodeId) {
+        return updatedTreeNode;
+      } else if (node.children.length) {
+        node.children = TreeDisplayController.updateTreeNode(
+          updatedTreeNode,
+          node.children,
+        );
+      }
+      return node;
+    });
 
   private static readonly updateTillRootParentNode = (
     childNode: TreeNodeVO,
@@ -87,22 +113,6 @@ export class TreeDisplayController {
     }
     return undefined;
   }
-
-  public static readonly updateTreeNode = (
-    updatedTreeNode: TreeNodeVO,
-    treeNodes: Array<TreeNodeVO>,
-  ): Array<TreeNodeVO> =>
-    treeNodes.map((node) => {
-      if (updatedTreeNode.nodeId === node.nodeId) {
-        return updatedTreeNode;
-      } else if (node.children.length) {
-        node.children = TreeDisplayController.updateTreeNode(
-          updatedTreeNode,
-          node.children,
-        );
-      }
-      return node;
-    });
 
   private static readonly toggleAllChildNodeActiveState = (
     childNodes: Array<TreeNodeVO>,

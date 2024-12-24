@@ -1,9 +1,13 @@
 import { useContext } from "react";
-import { onSetTreeNodes } from "../../../actions/TreeView.actions";
+import {
+  onSetIsEditableNodePresent,
+  onSetTreeNodes,
+} from "../../../actions/TreeView.actions";
 import { TreeDisplayContext } from "../../../Context.provider";
 import { TreeNodeVO } from "../../../data/model/treeDisplay/TreeDisplay.model";
 import { TreeDisplayController } from "../TreeDisplay.controller";
 import { CheckboxInputView } from "./CheckboxInput.component.view";
+import { CheckboxInputController } from "./CheckboxInput.controller";
 
 type CheckboxInputPropsVO = {
   currentNode: TreeNodeVO;
@@ -34,33 +38,18 @@ export const CheckboxInput: React.FC<CheckboxInputPropsVO> = (
   };
 
   const onAddNode = () => {
-    if (!treeViewContext) return;
-
-    const clonedCurrentNode = { ...currentNode };
-
-    const newChildNode: TreeNodeVO = {
-      id: clonedCurrentNode.id + 20,
-      name: "",
-      isEditMode: true,
-      children: [],
-      indeterminate: false,
-      isActive: false,
-      parentId: clonedCurrentNode.nodeId,
-
-      // you can use different library to generate unique id
-      nodeId: `${currentNode.name}-${clonedCurrentNode.id + 20}`,
-    };
-
-    clonedCurrentNode.children.push(newChildNode);
-
-    const updatedTreeNodes = TreeDisplayController.updateTreeNode(
-      clonedCurrentNode,
-      treeViewContext?.[0].treeNodes,
-    );
-
     const dispatch = treeViewContext?.[1];
+    const treeViewState = treeViewContext?.[0];
+    if (!dispatch || !treeViewState) return;
+    onSetIsEditableNodePresent(true, dispatch);
 
-    onSetTreeNodes(updatedTreeNodes, dispatch);
+    CheckboxInputController.onAddSubNode(
+      (updatedNodes) => {
+        onSetTreeNodes(updatedNodes, dispatch);
+      },
+      currentNode,
+      Array.from(treeViewState.treeNodes),
+    );
   };
 
   return (
@@ -70,6 +59,7 @@ export const CheckboxInput: React.FC<CheckboxInputPropsVO> = (
       setIsExpandNode={setIsExpandNode}
       onSelectNode={onSelectNode}
       currentNode={currentNode}
+      isShowAddNodeBtn={!treeViewContext?.[0].isEditableNodePresent}
     />
   );
 };

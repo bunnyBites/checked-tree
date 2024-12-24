@@ -1,12 +1,12 @@
 import { useContext } from "react";
 import { TreeDisplayContext } from "../../../Context.provider";
-import {
-  TreeDisplayHelper,
-  TreeNodeVO,
-} from "../../../data/model/treeDisplay/TreeDisplay.model";
+import { TreeNodeVO } from "../../../data/model/treeDisplay/TreeDisplay.model";
 import { TreeDisplayController } from "../TreeDisplay.controller";
 import { NodeInputView } from "./NodeInput.component.view";
-import { onSetTreeNodes } from "../../../actions/TreeView.actions";
+import {
+  onSetIsEditableNodePresent,
+  onSetTreeNodes,
+} from "../../../actions/TreeView.actions";
 
 type NodeInputPropsVO = {
   currentNode: TreeNodeVO;
@@ -23,6 +23,7 @@ export const NodeInput: React.FC<NodeInputPropsVO> = (
     const dispatch = treeViewContext?.[1];
 
     if (!treeNodeState || !dispatch) return;
+    onSetIsEditableNodePresent(false, dispatch);
 
     const updatedCurrentNode: TreeNodeVO = {
       ...currentNode,
@@ -30,14 +31,17 @@ export const NodeInput: React.FC<NodeInputPropsVO> = (
       name: nodeName,
     };
 
-    const updatedCurrentTreeNodes = TreeDisplayController.updateTreeNode(
+    // we are going to add new child to the current node
+    // we are going to select this new child node by default
+    // so we are going to use the onSelectTreeNode method
+    // this will automatically create a new child node and update the tree nodes as well
+    TreeDisplayController.onSelectTreeNode(
+      (updatedTreeNodes) => {
+        onSetTreeNodes(updatedTreeNodes, dispatch);
+      },
       updatedCurrentNode,
       treeNodeState.treeNodes,
-    );
-
-    onSetTreeNodes(
-      TreeDisplayHelper.prepareTreeNodeInitialValues(updatedCurrentTreeNodes),
-      dispatch,
+      true,
     );
   };
 

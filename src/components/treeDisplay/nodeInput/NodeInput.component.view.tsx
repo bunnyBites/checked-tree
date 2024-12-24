@@ -23,9 +23,15 @@ export const NodeInputView: React.FC<NodeInputPropsVO> = (
         onChange={(event) => {
           setNodeName(event.target.value);
         }}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && nodeName.trim()) {
+            onAddNode(nodeName.trim());
+          }
+        }}
       />
       <button
         type="button"
+        disabled={!nodeName.trim()}
         onClick={() => onAddNode(nodeName.trim())}
         className="input-group-text btn btn-success"
         id="basic-addon1"
