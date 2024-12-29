@@ -68,7 +68,7 @@ export const CheckboxInputView: React.FC<CheckboxInputViewPropsVO> = (
           />
           <label
             className="form-check-label"
-            htmlFor={`${currentNode.id}-checkbox`}
+            htmlFor={`${currentNode.nodeId}-checkbox`}
           >
             {currentNode.name}
           </label>

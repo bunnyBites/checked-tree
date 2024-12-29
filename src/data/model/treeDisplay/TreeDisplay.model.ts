@@ -1,5 +1,6 @@
+import uuid from "react-uuid";
+
 export interface TreeNodeVO {
-  id: number;
   name: string;
   isActive: boolean;
   parentId?: string;
@@ -17,7 +18,7 @@ export class TreeDisplayHelper {
     treeNodes: Array<TreeNodeVO>,
   ): Array<TreeNodeVO> =>
     treeNodes.map((node) => {
-      const nodeId = node?.nodeId || `${node.name}-${node.id}`;
+      const nodeId = node?.nodeId || uuid();
 
       return {
         ...node,
@@ -35,7 +36,7 @@ export class TreeDisplayHelper {
     parentNodeId: string,
   ): Array<TreeNodeVO> =>
     childNodes?.map((node) => {
-      const nodeId = node?.nodeId || `${node.name}-${node.id}`;
+      const nodeId = node?.nodeId || uuid();
 
       return {
         ...node,
