@@ -1,3 +1,4 @@
+// checked-tree/src/components/treeDisplay/nodeInput/NodeInput.component.tsx
 import { useContext } from "react";
 import { TreeDisplayContext } from "../../../Context.provider";
 import { TreeNodeVO } from "../../../data/model/treeDisplay/TreeDisplay.model";
@@ -29,20 +30,16 @@ export const NodeInput: React.FC<NodeInputPropsVO> = (
       ...currentNode,
       isEditMode: false,
       name: nodeName,
+      isActive: false,
+      indeterminate: false,
     };
 
-    // we are going to add new child to the current node
-    // we are going to select this new child node by default
-    // so we are going to use the onSelectTreeNode method
-    // this will automatically create a new child node and update the tree nodes as well
-    TreeDisplayController.onSelectTreeNode(
-      (updatedTreeNodes) => {
-        onSetTreeNodes(updatedTreeNodes, dispatch);
-      },
+    const updatedTreeNodes = TreeDisplayController.updateTreeNode(
       updatedCurrentNode,
       treeNodeState.treeNodes,
-      true,
     );
+
+    onSetTreeNodes(updatedTreeNodes, dispatch);
   };
 
   return <NodeInputView onAddNode={onAddNode} currentNode={currentNode} />;

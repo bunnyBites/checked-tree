@@ -11,20 +11,27 @@ export class CheckboxInputController {
     const clonedCurrentNode = { ...currentNode };
 
     const newChildNode: TreeNodeVO = {
-      // you can use different library to generate unique id
-      id: clonedCurrentNode.id + 20,
       name: "",
       isEditMode: true,
       children: [],
       indeterminate: false,
       isActive: false,
       parentId: clonedCurrentNode.nodeId,
-
-      // you can use different library to generate unique id
       nodeId: uuid(),
     };
 
-    clonedCurrentNode.children.push(newChildNode);
+    // Create new array of children to avoid mutation
+    clonedCurrentNode.children = [...clonedCurrentNode.children, newChildNode];
+
+    const activeChildrenLen = clonedCurrentNode.children.filter(
+      (node) => node.isActive,
+    ).length;
+
+    clonedCurrentNode.isActive =
+      activeChildrenLen === clonedCurrentNode.children.length;
+    clonedCurrentNode.indeterminate =
+      activeChildrenLen > 0 &&
+      activeChildrenLen < clonedCurrentNode.children.length;
 
     const updatedTreeNodes = TreeDisplayController.updateTreeNode(
       clonedCurrentNode,

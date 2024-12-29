@@ -103,14 +103,18 @@ export class TreeDisplayController {
     for (const node of treeNodesToBeProbed) {
       if (node.nodeId === parentId) {
         return node;
-      } else if (node.children.length) {
+      }
+
+      if (node.children.length) {
         const searchedParentNode = TreeDisplayController.getParentNode(
           parentId,
           node.children,
         );
+
         if (searchedParentNode) return searchedParentNode;
       }
     }
+
     return undefined;
   }
 
